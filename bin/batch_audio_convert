@@ -10,7 +10,7 @@ class BatchAudioConvert
   include EasyAppHelper::Logger
 
   def initialize
-    init_app_helper "batch_audio_convert", "Batch Audio Converter", "Convert your FLAC library to OGG files for your portable media players.", "1.0"
+    init_app_helper "batch_audio_convert", "Batch Audio Converter", DESCRIPTION, "1.0"
     logger.info "Application is now started."
   end
 
@@ -25,6 +25,21 @@ class BatchAudioConvert
     # Should we override files
     opt.on :f, :force, 'Forces files override.', :argument => false
   end
+
+  DESCRIPTION = <<DESCR
+This application batch-transforms audio files from your central media library from one 
+format to another. It basically takes the assumption that the audio library is already 
+correctly organized in two levels directory structure that could be:
+- artist/album
+- various/compil
+Nevertheless the files or directories specified could be located anywhere. Only the 
+structure is assumed.
+
+It actually replicates the original structure and copies all the tags (handled by taglib)
+to the generated audio files.
+
+Currently only manages FLAC to OGG, all other files are copied untouched.
+DESCR
 
 end
 
