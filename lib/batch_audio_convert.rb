@@ -6,12 +6,14 @@
 ################################################################################
 
 require "batch_audio_convert/version"
+require "batch_audio_convert/file_utils"
+require "batch_audio_convert/audio_utils"
 
 
 module BatchAudioConvert
 
-#  include FileUtils
-#  include AudioUtils
+  include FileUtils
+  include AudioUtils
 
 
   # Determine files to process
