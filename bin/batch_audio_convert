@@ -1,3 +1,10 @@
+################################################################################
+# BatchAudioConvert
+#
+# Copyright (c) 2013 L.Briais under MIT license
+# http://opensource.org/licenses/MIT
+################################################################################
+
 #!/usr/bin/env ruby
 
 require 'easy_app_helper'
@@ -12,7 +19,7 @@ class BatchAudioConvertApp
   include BatchAudioConvert
 
   def initialize
-    init_app_helper "batch_audio_convert", "Batch Audio Converter", DESCRIPTION, BatchAudioConvert::VERSION
+    init_app_helper "batch_audio_convert", "Batch Audio Converter", DESCRIPTION, VERSION
     logger.info "Application is now started."
   end
 
@@ -24,11 +31,13 @@ class BatchAudioConvertApp
       logger.fatal "Parameters not correctly provided: " + e.message
       puts help
       puts e.message
+      exit
     end
     begin
       process_files build_file_list
     rescue => e
-      logger.fatal "Unhandled error: "+ e.message
+      logger.fatal "Unhandled error: " + e.message
+      e.backtrace.each {|m| logger.fatal m}
     end    
   end
 
@@ -62,4 +71,6 @@ DESCR
 
 end
 
-BatchAudioConvertApp.new .main
+
+# Here we start
+BatchAudioConvertApp.new.main
