@@ -1,18 +1,37 @@
 #!/usr/bin/env ruby
 
 require 'easy_app_helper'
+require 'batch_audio_convert'
 
 
-class BatchAudioConvert
+class BatchAudioConvertApp
 
   include EasyAppHelper
   include EasyAppHelper::Config
   include EasyAppHelper::Logger
+  include BatchAudioConvert
 
   def initialize
-    init_app_helper "batch_audio_convert", "Batch Audio Converter", DESCRIPTION, "1.0"
+    init_app_helper "batch_audio_convert", "Batch Audio Converter", DESCRIPTION, BatchAudioConvert::VERSION
     logger.info "Application is now started."
   end
+
+  def main
+    begin
+      raise "No source has been provided !!" if app_config[:source].nil?
+      raise "No destination has been provided !!" if app_config[:destination].nil?
+    rescue => e
+      logger.fatal "Parameters not correctly provided: " + e.message
+      puts help
+      puts e.message
+    end
+    begin
+      process_files build_file_list
+    rescue => e
+      logger.fatal "Unhandled error: "+ e.message
+    end    
+  end
+
 
   def show_config
     puts "Application config is"
@@ -43,4 +62,4 @@ DESCR
 
 end
 
-BatchAudioConvert.new
+BatchAudioConvertApp.new .main
