@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+require 'easy_app_helper'
+
+
+class BatchAudioConvert
+
+  include EasyAppHelper
+  include EasyAppHelper::Config
+  include EasyAppHelper::Logger
+
+  def initialize
+    init_app_helper "batch_audio_convert", "Batch Audio Converter", "Convert your FLAC library to OGG files for your portable media players.", "1.0"
+    logger.info "Application is now started."
+  end
+
+  def show_config
+    puts "Application config is"
+    puts app_config.to_yaml
+  end
+
+  def add_specifc_command_line_options(opt) 
+    # Enables to override ogg quality from command line
+    opt.on :q, 'ogg-quality', 'Defines encoding quality for OGG files.', :argument => true, :as => Integer
+    # Should we override files
+    opt.on :f, :force, 'Forces files override.', :argument => false
+  end
+
+end
+
+BatchAudioConvert.new
