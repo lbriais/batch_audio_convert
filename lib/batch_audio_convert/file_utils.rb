@@ -13,7 +13,7 @@ module FileUtils
 
   # Adds all files in a directory structure
   def populate_list_of_files_from_directory(file_list, entry)
-    log.debug "\"#{entry}\" is a directory. Processing..."
+    logger.debug "\"#{entry}\" is a directory. Processing..."
     Find.find(entry) do |file|
       next unless is_directory_to_process?(File.dirname file)
       file_list << file if File.file?(file)
@@ -23,7 +23,7 @@ module FileUtils
 
   # Adds one file + its associated images if any
   def populate_list_of_files_from_file(file_list, entry)
-    log.debug "\"#{entry}\" is a file. Processing..."
+    logger.debug "\"#{entry}\" is a file. Processing..."
     file_list << entry
     # Find images if any
     Find.find(File.dirname(entry)) do |file|
@@ -42,7 +42,7 @@ module FileUtils
   def analyze_file(file)
     method_name = :copy
     destination_file = String.new(file)
-    @application_config[:extensions].each do |origin_ext, destination_ext|
+    app_config[:extensions].each do |origin_ext, destination_ext|
       if file =~ /\.#{origin_ext}$/i
         destination_file.gsub! /\.#{origin_ext}$/i, ".#{destination_ext}"
         method_name = origin_ext + '_to_' + destination_ext
@@ -55,7 +55,7 @@ module FileUtils
 
   def copy(origin, destination)
     logger.info "Copying \"#{origin}\" to \"#{destination}\"."
-    return if @application_config[:simulate]
+    return if app_config[:simulate]
     unless should_process_file? destination
        logger.info " - File exists. Skipping copy..."
       return
@@ -64,7 +64,7 @@ module FileUtils
     begin
       FileUtils.copy_file origin, destination
     rescue Exception => e
-      log.error "An error occurred during the copy - " + e.message
+      logger.error "An error occurred during the copy - " + e.message
     end
   end
 
@@ -74,7 +74,7 @@ module FileUtils
   end
 
   def replace_folder_in_destination!(file)
-    file.gsub! /^(?<base>.*\/)(?<full_file>[^\/]+\/[^\/]+\/[^\/]+)$/, "#{@application_config[:destination]}/\\k<full_file>"
+    file.gsub! /^(?<base>.*\/)(?<full_file>[^\/]+\/[^\/]+\/[^\/]+)$/, "#{app_config[:destination]}/\\k<full_file>"
   end
 
   def verify_destination_folder(file)
@@ -91,7 +91,7 @@ module FileUtils
         return true if filename =~ /\.#{filetype}$/i
       end
     end
-    log.warn "Directory \"#{dir}\" discarded, as not containing files to convert..."
+    logger.warn "Directory \"#{dir}\" discarded, as not containing files to convert..."
     false
   end
 
