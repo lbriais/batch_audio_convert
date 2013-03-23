@@ -17,7 +17,7 @@ module AudioUtils
 
   def flac_to_ogg(origin, destination)
     logger.info "Transforming \"#{origin}\" into \"#{destination}\"."
-    return if @application_config[:simulate]
+    return if app_config[:simulate]
     unless should_process_file? destination
       logger.info " - File exists. Skipping transformation..."
       return
@@ -45,7 +45,7 @@ module AudioUtils
         tags[tagname] = tag.send(tagname)
       end
     end
-    log.debug tags.inspect
+    logger.debug tags.inspect
     tags
   end
 
@@ -68,7 +68,7 @@ module AudioUtils
   def build_ogg_cmd(origin, destination)
     cmd = OGG_ENC_CMD.gsub '##WAVFILE##', origin
     cmd.gsub! '##OGGFILE##', destination
-    cmd.gsub '##OGGQUALITY##', @application_config[:'ogg-quality'].to_s
+    cmd.gsub '##OGGQUALITY##', app_config[:'ogg-quality'].to_s
   end
 
 end

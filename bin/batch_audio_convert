@@ -1,11 +1,11 @@
+#!/usr/bin/env ruby
+
 ################################################################################
 # BatchAudioConvert
 #
 # Copyright (c) 2013 L.Briais under MIT license
 # http://opensource.org/licenses/MIT
 ################################################################################
-
-#!/usr/bin/env ruby
 
 require 'easy_app_helper'
 require 'batch_audio_convert'
