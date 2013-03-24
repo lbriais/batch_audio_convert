@@ -54,10 +54,10 @@ module FileUtils
   end
 
   def copy(origin, destination)
-    logger.info "Copying \"#{origin}\" to \"#{destination}\"."
+    puts_and_logs "Copying \"#{origin}\" to \"#{destination}\"."
     return if app_config[:simulate]
     unless should_process_file? destination
-       logger.info " - File exists. Skipping copy..."
+       puts_and_logs " - File exists. Skipping copy..."
       return
     end
     verify_destination_folder(destination)
@@ -80,7 +80,7 @@ module FileUtils
   def verify_destination_folder(file)
     dir = File.dirname file
     unless File.directory? dir
-      logger.info "Creating directory \"#{dir}\"..."
+      puts_and_logs "Creating directory \"#{dir}\"..."
       FileUtils.mkdir_p dir
     end
   end

@@ -18,7 +18,7 @@ module BatchAudioConvert
 
   # Determine files to process
   def build_file_list
-    logger.info 'Finding files...'
+    puts_and_logs 'Finding files...'
     file_list = []
     app_config[:source].each do |entry|
       if File.directory?(entry)
@@ -37,7 +37,7 @@ module BatchAudioConvert
 
   # Generate destination directory
   def process_files(file_list)
-    logger.info 'Processing files...'
+    puts_and_logs 'Processing files...'
     file_list.each do |file|
       analysis_result = analyze_file file
       self.send analysis_result[:method_name], file, analysis_result[:destination_file]
@@ -48,7 +48,7 @@ module BatchAudioConvert
   # Runs an external command
   def run_command(cmd)
     if app_config[:simulate]
-      logger.info " - Simulate running \"#{cmd}\""
+      puts_and_logs " - Simulate running \"#{cmd}\""
       return
     end
     if app_config[:debug]
@@ -56,7 +56,7 @@ module BatchAudioConvert
       system cmd
       return
     end
-    logger.info " - Running \"#{cmd}\"" if app_config[:verbose]
+    puts_and_logs " - Running \"#{cmd}\"" if app_config[:verbose]
     system(cmd + ' >' + @@BLACK_HOLE_LOGGER + " 2>&1")
 
   end
