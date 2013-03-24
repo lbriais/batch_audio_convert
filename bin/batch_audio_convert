@@ -27,6 +27,7 @@ class BatchAudioConvertApp
     begin
       raise "No source has been provided !!" if app_config[:source].nil?
       raise "No destination has been provided !!" if app_config[:destination].nil?
+      raise "Please specify ogg quality !!" if app_config[:'ogg-quality'].nil?
     rescue => e
       logger.fatal "Parameters not correctly provided: " + e.message
       puts help
