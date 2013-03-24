@@ -16,10 +16,10 @@ module AudioUtils
   FLAC_DEC_CMD = 'flac -d -f -o "##WAVFILE##" "##FLACFILE##"'
 
   def flac_to_ogg(origin, destination)
-    logger.info "Transforming \"#{origin}\" into \"#{destination}\"."
+    puts_and_logs "Transforming \"#{origin}\" into \"#{destination}\"."
     return if app_config[:simulate]
     unless should_process_file? destination
-      logger.info " - File exists. Skipping transformation..."
+      puts_and_logs " - File exists. Skipping transformation..."
       return
     end
     verify_destination_folder(destination)
@@ -30,14 +30,14 @@ module AudioUtils
       run_command build_flac_cmd(origin, temp_file.path)
       run_command build_ogg_cmd(temp_file.path, destination)
       set_ogg_tags destination, tags
-      logger.info " - Done"
+      puts_and_logs " - Done"
     ensure
       temp_file.unlink
     end
   end
 
   def flac_tags(file)
-    logger.info " - Reading FLAC tags"
+    puts_and_logs " - Reading FLAC tags"
     tags = {}
     TagLib::FileRef.open(file) do |fileref|
       tag = fileref.tag
@@ -50,7 +50,7 @@ module AudioUtils
   end
 
   def set_ogg_tags(file, tags)
-    logger.info " - Writing OGG tags"
+    puts_and_logs " - Writing OGG tags"
     TagLib::FileRef.open(file) do |fileref|
       tag = fileref.tag
       tags.each do |tagname, value|

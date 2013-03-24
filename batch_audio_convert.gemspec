@@ -10,8 +10,9 @@ Gem::Specification.new do |spec|
   spec.email         = ["lbnetid+rb@gmail.com"]
   spec.description   = %q{Batch Audio Convert}
   spec.summary       = %q{Converts FLAC audio files to OGG format while keeping tags and tree structure}
-  spec.homepage      = "https://github.com/lbriais/easy_app_helper"
+  spec.homepage      = "https://github.com/lbriais/batch_audio_convert"
   spec.license       = "MIT"
+  spec.platform      = Gem::Platform::CURRENT
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
@@ -21,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
 
-  spec.add_runtime_dependency "easy_app_helper"
+  spec.add_runtime_dependency "easy_app_helper", ">= 0.0.8"
   spec.add_runtime_dependency "taglib-ruby"
 
 end
