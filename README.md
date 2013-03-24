@@ -1,6 +1,6 @@
 # BatchAudioConvert
 
-The goal of this [gem][bacg] is to enable batch transforming audio files from one format to another.
+**The goal of this [gem][bacg] is to batch transform audio files from one format to another.**
 
 It basically takes the assumption that the audio library is already correctly organized in the standard two levels directory structure that could be:
 
@@ -9,7 +9,7 @@ It basically takes the assumption that the audio library is already correctly or
 
 Nevertheless the files or directories specified could be located anywhere. Only the structure is assumed.
 
-It actually replicates the original structure and copies all the tags (handled by taglib) to the generated audio files.
+It actually replicates the original structure and copies all the tags (handled by [taglib](http://taglib.github.com/)) to the generated audio files.
 
 
 It currently supports FLAC to OGG transformation.
@@ -58,12 +58,21 @@ To be clear, the easiest place to create your config should be:
 #### Config file content
 
 ```yaml
+# Minimum configuration for batch_audio_convert
+
+# Hash defining possible transformations.
 :extensions:
   flac: ogg
+
+# Quality of the generated ogg files.
 :ogg-quality: 6
+
+# An array of sources to process. Non valid entries are skipped.
 :source:
   - list of files or directories
   - etc ...
+
+# Where the transformed files will be created.
 :destination: the root directory of where you want the transformed files to go (do not need to exist, only the parent dir).
 ```
 
@@ -120,7 +129,15 @@ By default batch_audio_convert won't regenerate a file already present in the de
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
-Currently there is only flac to ogg conversion, but the program is ready to handle other potential transformations. Do not hesitate !
+Currently there is only flac to ogg conversion, but the program is ready to handle other potential transformations. Do not hesitate, you just have to implement one method named `<origin>_to_<dest>` in the `audio_utils.rb` file and add one supported extension in the config "`extensions`" hash.
+
+Currently only the `flac_to_ogg` method exists and this is why the "`extensions`" hash in the config file contains:
+
+```yaml
+:extensions:
+  flac: ogg
+```
+
 
 
 
