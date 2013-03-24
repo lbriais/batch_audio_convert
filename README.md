@@ -120,6 +120,9 @@ By default batch_audio_convert won't regenerate a file already present in the de
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
+Currently there is only flac to ogg conversion, but the program is ready to handle other potential transformations. Do not hesitate !
+
+
 
 [eahg]: https://rubygems.org/gems/easy_app_helper        "Easy App Helper Gem"
 [bacg]: https://rubygems.org/gems/batch_audio_convert        "Batch Audio Convert Gem"
