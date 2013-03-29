@@ -68,7 +68,7 @@ structure is assumed.
 It actually replicates the original structure and copies all the tags (handled by taglib)
 to the generated audio files.
 
-Currently only manages FLAC to OGG, all other files are copied untouched.
+Currently only manages FLAC to OGG and FLAC to MP3, all other files are copied untouched.
 DESCR
 
 end

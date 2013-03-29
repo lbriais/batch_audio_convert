@@ -64,23 +64,23 @@ To be clear, the easiest place to create your config should be:
 # Minimum configuration for batch_audio_convert
 
 # Hash defining possible transformations.
-:extensions:
+extensions:
   flac: ogg
   flac: mp3
 
 # [Optional] Quality of the generated ogg files. Default to 6
-:ogg-quality: 6
+ogg-quality: 6
 
 # [Optional] Bitrate of the generated mp3 files. Default to 256
-:mp3-quality: 256
+mp3-quality: 256
 
 # An array of sources to process. Non valid entries are skipped.
-:source:
+source:
   - list of files or directories
   - etc ...
 
 # Where the transformed files will be created.
-:destination: the root directory of where you want the transformed files to go (do not need to exist, only the parent dir).
+destination: the root directory of where you want the transformed files to go (do not need to exist, only the parent dir).
 ```
 
 ## Usage
@@ -101,7 +101,7 @@ The inline help is provided by [EasyAppHelper gem][eahg] mechanism:
 	It actually replicates the original structure and copies all the tags (handled by taglib)
 	to the generated audio files.
 	
-	Currently only manages FLAC to OGG, all other files are copied untouched.
+	Currently only manages FLAC to OGG and FLAC to MP3, all other files are copied untouched.
 	
 	-- Generic options -------------------------------------------
            	--auto              Auto mode. Bypasses questions to user.
@@ -142,7 +142,7 @@ Currently there is only flac to ogg and flac to mp3 conversion, but the program 
 Currently only the `flac_to_ogg` and `flac_to_mp3` method exists and this is why the "`extensions`" hash in the config file contains:
 
 ```yaml
-:extensions:
+extensions:
   flac: ogg
   flac: mp3
 ```

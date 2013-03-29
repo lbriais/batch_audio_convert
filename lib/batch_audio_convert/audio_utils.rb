@@ -30,6 +30,8 @@ module AudioUtils
     end
   end
 
+  private
+
   # flac to whatever block statement you provide
   # In two steps:
   #  1. flac to wav
