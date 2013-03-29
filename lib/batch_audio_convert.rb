@@ -52,7 +52,11 @@ module BatchAudioConvert
       return
     end
     if app_config[:debug]
-      logger.debug  " - Running \"#{cmd}\""
+      if app_config[:verbose]
+        puts_and_logs " - Running \"#{cmd}\""
+      else
+        logger.debug " - Running \"#{cmd}\""
+      end
       system cmd
       return
     end
