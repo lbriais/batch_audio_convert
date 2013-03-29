@@ -57,7 +57,7 @@ module BatchAudioConvert
       return
     end
     puts_and_logs " - Running \"#{cmd}\"" if app_config[:verbose]
-    system(cmd + ' >' + @@BLACK_HOLE_LOGGER + " 2>&1")
+    system(cmd + ' > /dev/null 2>&1')
 
   end
 
