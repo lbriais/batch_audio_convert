@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["L.Briais"]
   spec.email         = ["lbnetid+rb@gmail.com"]
   spec.description   = %q{Batch Audio Convert}
-  spec.summary       = %q{Converts FLAC audio files to OGG format while keeping tags and tree structure}
+  spec.summary       = %q{Converts FLAC audio files to OGG or MP3 format while keeping tags and tree structure}
   spec.homepage      = "https://github.com/lbriais/batch_audio_convert"
   spec.license       = "MIT"
   spec.platform      = Gem::Platform::CURRENT

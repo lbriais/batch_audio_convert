@@ -27,7 +27,6 @@ class BatchAudioConvertApp
     begin
       raise "No source has been provided !!" if app_config[:source].nil?
       raise "No destination has been provided !!" if app_config[:destination].nil?
-      raise "Please specify ogg quality !!" if app_config[:'ogg-quality'].nil?
     rescue => e
       logger.fatal "Parameters not correctly provided: " + e.message
       puts help
@@ -51,6 +50,8 @@ class BatchAudioConvertApp
   def add_specifc_command_line_options(opt) 
     # Enables to override ogg quality from command line
     opt.on :q, 'ogg-quality', 'Defines encoding quality for OGG files.', :argument => true, :as => Integer
+    # Enables to override mp3 quality from command line
+    opt.on :b, 'mp3-quality', 'Defines encoding quality (bitrate) for MP3 files.', :argument => true, :as => Integer
     # Should we override files
     opt.on :f, :force, 'Forces files override.', :argument => false
   end
