@@ -14,8 +14,27 @@ module AudioUtils
 
   OGG_ENC_CMD = 'oggenc -q##OGGQUALITY## -o "##OGGFILE##" "##WAVFILE##"'
   FLAC_DEC_CMD = 'flac -d -f -o "##WAVFILE##" "##FLACFILE##"'
+  MP3_ENC_CMD = 'lame -h -b ##MP3QUALITY## "##WAVFILE##" "##MP3FILE##"'
 
-  def flac_to_ogg(origin, destination)
+  def flac_to_ogg (origin, destination)
+    flac_to do |temp_file, destination, tags|
+      run_command build_ogg_cmd(temp_file.path, destination)
+      set_ogg_tags destination, tags
+    end
+  end
+
+  def flac_to_mp3 (origin, destination)
+    flac_to do |temp_file, destination, tags|
+      run_command build_mp3_cmd(temp_file.path, destination)
+      set_mp3_tags destination, tags
+    end
+  end
+
+  # flac to whatever block statement you provide
+  # In two steps:
+  #  1. flac to wav
+  #  2. wav to whatever
+  def flac_to (origin, destination)
     puts_and_logs "Transforming \"#{origin}\" into \"#{destination}\"."
     return if app_config[:simulate]
     unless should_process_file? destination
@@ -28,8 +47,7 @@ module AudioUtils
       temp_file.close
       tags = flac_tags(origin)
       run_command build_flac_cmd(origin, temp_file.path)
-      run_command build_ogg_cmd(temp_file.path, destination)
-      set_ogg_tags destination, tags
+      yield temp_file, destination, tags
       puts_and_logs " - Done"
     ensure
       temp_file.unlink
@@ -66,9 +84,31 @@ module AudioUtils
   end
 
   def build_ogg_cmd(origin, destination)
+    app_config[:'ogg-quality'] = 6 if app_config[:'ogg-quality'].nil?
+
     cmd = OGG_ENC_CMD.gsub '##WAVFILE##', origin
     cmd.gsub! '##OGGFILE##', destination
     cmd.gsub '##OGGQUALITY##', app_config[:'ogg-quality'].to_s
   end
+
+  def set_mp3_tags(file, tags)
+    puts_and_logs " - Writing MP3 tags"
+    TagLib::MPEG::File.open(file) do |fileref|
+      tag = fileref.id3v2_tag(true)
+      tags.each do |tagname, value|
+        tag.send(tagname.to_s + "=", tags[tagname])
+      end
+      fileref.save
+    end
+  end  
+
+  def build_mp3_cmd(origin, destination)
+    app_config[:'mp3-quality'] = 256 if app_config[:'mp3-quality'].nil?
+
+    cmd = MP3_ENC_CMD.gsub '##WAVFILE##', origin
+    cmd.gsub! '##MP3FILE##', destination
+    cmd.gsub '##MP3QUALITY##', app_config[:'mp3-quality'].to_s
+  end
+
 
 end
