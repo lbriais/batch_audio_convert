@@ -12,7 +12,9 @@ Nevertheless the files or directories specified could be located anywhere. Only 
 It actually replicates the original structure and copies all the tags (handled by [taglib](http://taglib.github.com/)) to the generated audio files.
 
 
-It currently supports FLAC to OGG transformation.
+It currently supports:
+* FLAC to OGG transformation
+* FLAC to MP3 transformation
 
 ## Installation
 
@@ -20,8 +22,9 @@ It currently supports FLAC to OGG transformation.
 
 This gem has some system dependencies.
 
-     sudo apt get install libtag1-dev oggenc flac
+     sudo apt-get install libtag1-dev vorbis-tools flac lame
 
+Both vorbis-tools and lame can be optional depending on the encoding you want (ogg or mp3)
 
 It could probably work under Windows/Cygwin with some tweaking, but never tried...
 It is based on the [easy_app_helper Gem][eahg]([sources][eahs]), but it will installed automatically by the gem/bundle mechanism.
@@ -63,9 +66,13 @@ To be clear, the easiest place to create your config should be:
 # Hash defining possible transformations.
 :extensions:
   flac: ogg
+  flac: mp3
 
-# Quality of the generated ogg files.
+# [Optional] Quality of the generated ogg files. Default to 6
 :ogg-quality: 6
+
+# [Optional] Bitrate of the generated mp3 files. Default to 256
+:mp3-quality: 256
 
 # An array of sources to process. Non valid entries are skipped.
 :source:
@@ -112,6 +119,7 @@ The inline help is provided by [EasyAppHelper gem][eahg] mechanism:
            	--config-file       Specify a config file.
 		
 	-- Script specific options------------------------------------
+	    -b, --mp3-quality       Defines encoding bitrate for MP3 files.
 	    -q, --ogg-quality       Defines encoding quality for OGG files.
 	    -f, --force             Forces files override.
 
@@ -129,13 +137,14 @@ By default batch_audio_convert won't regenerate a file already present in the de
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
-Currently there is only flac to ogg conversion, but the program is ready to handle other potential transformations. Do not hesitate, you just have to implement one method named `<origin>_to_<dest>` in the `audio_utils.rb` file and add one supported extension in the config "`extensions`" hash.
+Currently there is only flac to ogg and flac to mp3 conversion, but the program is ready to handle other potential transformations. Do not hesitate, you just have to implement one method named `<origin>_to_<dest>` in the `audio_utils.rb` file and add one supported extension in the config "`extensions`" hash.
 
-Currently only the `flac_to_ogg` method exists and this is why the "`extensions`" hash in the config file contains:
+Currently only the `flac_to_ogg` and `flac_to_mp3` method exists and this is why the "`extensions`" hash in the config file contains:
 
 ```yaml
 :extensions:
   flac: ogg
+  flac: mp3
 ```
 
 
