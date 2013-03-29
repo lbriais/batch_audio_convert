@@ -20,7 +20,7 @@ It currently supports FLAC to OGG transformation.
 
 This gem has some system dependencies.
 
-     sudo apt get install libtag1-dev oggenc flac
+     sudo apt-get install libtag1-dev vorbis-tools flac
 
 
 It could probably work under Windows/Cygwin with some tweaking, but never tried...
