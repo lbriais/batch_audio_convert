@@ -17,14 +17,14 @@ module AudioUtils
   MP3_ENC_CMD = 'lame -h -b ##MP3QUALITY## "##WAVFILE##" "##MP3FILE##"'
 
   def flac_to_ogg (origin, destination)
-    flac_to do |temp_file, destination, tags|
+    flac_to origin, destination do |temp_file, tags|
       run_command build_ogg_cmd(temp_file.path, destination)
       set_ogg_tags destination, tags
     end
   end
 
   def flac_to_mp3 (origin, destination)
-    flac_to do |temp_file, destination, tags|
+    flac_to origin, destination do |temp_file, tags|
       run_command build_mp3_cmd(temp_file.path, destination)
       set_mp3_tags destination, tags
     end
@@ -47,7 +47,7 @@ module AudioUtils
       temp_file.close
       tags = flac_tags(origin)
       run_command build_flac_cmd(origin, temp_file.path)
-      yield temp_file, destination, tags
+      yield temp_file, tags
       puts_and_logs " - Done"
     ensure
       temp_file.unlink
