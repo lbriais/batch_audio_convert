@@ -38,7 +38,7 @@ module AudioUtils
   #  2. wav to whatever
   def flac_to (origin, destination)
     puts_and_logs "Transforming \"#{origin}\" into \"#{destination}\"."
-    return if app_config[:simulate]
+    return if config[:simulate]
     unless should_process_file? destination
       puts_and_logs " - File exists. Skipping transformation..."
       return
@@ -86,11 +86,11 @@ module AudioUtils
   end
 
   def build_ogg_cmd(origin, destination)
-    app_config[:'ogg-quality'] = 6 if app_config[:'ogg-quality'].nil?
+    config[:'ogg-quality'] = 6 if config[:'ogg-quality'].nil?
 
     cmd = OGG_ENC_CMD.gsub '##WAVFILE##', origin
     cmd.gsub! '##OGGFILE##', destination
-    cmd.gsub '##OGGQUALITY##', app_config[:'ogg-quality'].to_s
+    cmd.gsub '##OGGQUALITY##', config[:'ogg-quality'].to_s
   end
 
   def set_mp3_tags(file, tags)
@@ -105,11 +105,11 @@ module AudioUtils
   end  
 
   def build_mp3_cmd(origin, destination)
-    app_config[:'mp3-quality'] = 256 if app_config[:'mp3-quality'].nil?
+    config[:'mp3-quality'] = 256 if config[:'mp3-quality'].nil?
 
     cmd = MP3_ENC_CMD.gsub '##WAVFILE##', origin
     cmd.gsub! '##MP3FILE##', destination
-    cmd.gsub '##MP3QUALITY##', app_config[:'mp3-quality'].to_s
+    cmd.gsub '##MP3QUALITY##', config[:'mp3-quality'].to_s
   end
 
 

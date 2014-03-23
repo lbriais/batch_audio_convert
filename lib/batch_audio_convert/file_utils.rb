@@ -42,7 +42,7 @@ module FileUtils
   def analyze_file(file)
     method_name = :copy
     destination_file = String.new(file)
-    app_config[:extensions].each do |origin_ext, destination_ext|
+    config[:extensions].each do |origin_ext, destination_ext|
       if file =~ /\.#{origin_ext}$/i
         destination_file.gsub! /\.#{origin_ext}$/i, ".#{destination_ext}"
         method_name = origin_ext + '_to_' + destination_ext
@@ -55,7 +55,7 @@ module FileUtils
 
   def copy(origin, destination)
     puts_and_logs "Copying \"#{origin}\" to \"#{destination}\"."
-    return if app_config[:simulate]
+    return if config[:simulate]
     unless should_process_file? destination
        puts_and_logs " - File exists. Skipping copy..."
       return
@@ -69,12 +69,12 @@ module FileUtils
   end
 
   def should_process_file?(file)
-    return true if app_config[:force]
+    return true if config[:force]
     return !File.exists?(file)
   end
 
   def replace_folder_in_destination!(file)
-    file.gsub! /^(?<base>.*\/)(?<full_file>[^\/]+\/[^\/]+\/[^\/]+)$/, "#{app_config[:destination]}/\\k<full_file>"
+    file.gsub! /^(?<base>.*\/)(?<full_file>[^\/]+\/[^\/]+\/[^\/]+)$/, "#{config[:destination]}/\\k<full_file>"
   end
 
   def verify_destination_folder(file)
@@ -86,7 +86,7 @@ module FileUtils
   end
 
   def is_directory_to_process?(dir)
-    app_config[:extensions].keys.each do |filetype|
+    config[:extensions].keys.each do |filetype|
       Dir.foreach dir do |filename|
         return true if filename =~ /\.#{filetype}$/i
       end

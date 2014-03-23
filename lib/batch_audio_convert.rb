@@ -20,7 +20,7 @@ module BatchAudioConvert
   def build_file_list
     puts_and_logs 'Finding files...'
     file_list = []
-    app_config[:source].each do |entry|
+    config[:source].each do |entry|
       if File.directory?(entry)
         populate_list_of_files_from_directory(file_list, entry) 
         next
@@ -47,12 +47,12 @@ module BatchAudioConvert
 
   # Runs an external command
   def run_command(cmd)
-    if app_config[:simulate]
+    if config[:simulate]
       puts_and_logs " - Simulate running \"#{cmd}\""
       return
     end
-    if app_config[:debug]
-      if app_config[:verbose]
+    if config[:debug]
+      if config[:verbose]
         puts_and_logs " - Running \"#{cmd}\""
       else
         logger.debug " - Running \"#{cmd}\""
@@ -60,7 +60,7 @@ module BatchAudioConvert
       system cmd
       return
     end
-    puts_and_logs " - Running \"#{cmd}\"" if app_config[:verbose]
+    puts_and_logs " - Running \"#{cmd}\"" if config[:verbose]
     system(cmd + ' > /dev/null 2>&1')
 
   end

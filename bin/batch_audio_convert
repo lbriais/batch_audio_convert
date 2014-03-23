@@ -14,19 +14,21 @@ require 'batch_audio_convert'
 class BatchAudioConvertApp
 
   include EasyAppHelper
-  include EasyAppHelper::Config
-  include EasyAppHelper::Logger
   include BatchAudioConvert
 
+  APP_NAME = "batch_audio_convert"
+  # DESCRIPTION = "Batch Audio Converter"
+
   def initialize
-    init_app_helper "batch_audio_convert", "Batch Audio Converter", DESCRIPTION, VERSION
+    # Providing this data is optional but brings better logging and online help
+    config.describes_application(app_name: APP_NAME, app_version: VERSION, app_description: DESCRIPTION)
     logger.info "Application is now started."
   end
 
   def main
     begin
-      raise "No source has been provided !!" if app_config[:source].nil?
-      raise "No destination has been provided !!" if app_config[:destination].nil?
+      raise "No source has been provided !!" if config[:source].nil?
+      raise "No destination has been provided !!" if config[:destination].nil?
     rescue => e
       logger.fatal "Parameters not correctly provided: " + e.message
       puts help
@@ -44,7 +46,7 @@ class BatchAudioConvertApp
 
   def show_config
     puts "Application config is"
-    puts app_config.to_yaml
+    puts config.to_yaml
   end
 
   def add_specifc_command_line_options(opt) 
