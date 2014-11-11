@@ -27,6 +27,7 @@ class BatchAudioConvertApp
 
   def main
     begin
+      add_cmd_line_options
       raise "No source has been provided !!" if config[:source].nil?
       raise "No destination has been provided !!" if config[:destination].nil?
     rescue => e
@@ -36,11 +37,15 @@ class BatchAudioConvertApp
       exit
     end
     begin
+      if config[:help]
+        puts config.help
+        exit 0
+      end
       process_files build_file_list
     rescue => e
       logger.fatal "Unhandled error: " + e.message
       e.backtrace.each {|m| logger.fatal m}
-    end    
+    end
   end
 
 
@@ -49,13 +54,15 @@ class BatchAudioConvertApp
     puts config.to_yaml
   end
 
-  def add_specifc_command_line_options(opt) 
-    # Enables to override ogg quality from command line
-    opt.on :q, 'ogg-quality', 'Defines encoding quality for OGG files.', :argument => true, :as => Integer
-    # Enables to override mp3 quality from command line
-    opt.on :b, 'mp3-quality', 'Defines encoding quality (bitrate) for MP3 files.', :argument => true, :as => Integer
-    # Should we override files
-    opt.on :f, :force, 'Forces files override.', :argument => false
+  def add_cmd_line_options
+    config.add_command_line_section do |slop|
+      # Enables to override ogg quality from command line
+      slop.on :q, 'ogg-quality', 'Defines encoding quality for OGG files.', :argument => true, :as => Integer
+      # Enables to override mp3 quality from command line
+      slop.on :b, 'mp3-quality', 'Defines encoding quality (bitrate) for MP3 files.', :argument => true, :as => Integer
+      # Should we override files
+      slop.on :f, :force, 'Forces files override.', :argument => false
+    end
   end
 
   DESCRIPTION = <<DESCR
