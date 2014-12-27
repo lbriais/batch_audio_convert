@@ -67,7 +67,7 @@ class BatchAudioConvertApp
 
   def hardcoded_config
     config[:extensions] ||= {
-        flac: :ogg
+        flac: :ogg # mp3 although supported
     }
   end
 
