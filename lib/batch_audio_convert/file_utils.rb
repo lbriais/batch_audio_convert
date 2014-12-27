@@ -1,7 +1,7 @@
 ################################################################################
 # BatchAudioConvert
 #
-# Copyright (c) 2013 L.Briais under MIT license
+# Copyright (c) 2013-2015 L.Briais under MIT license
 # http://opensource.org/licenses/MIT
 ################################################################################
 
@@ -43,6 +43,8 @@ module FileUtils
     method_name = :copy
     destination_file = String.new(file)
     config[:extensions].each do |origin_ext, destination_ext|
+      origin_ext = origin_ext.to_s
+      destination_ext = destination_ext.to_s
       if file =~ /\.#{origin_ext}$/i
         destination_file.gsub! /\.#{origin_ext}$/i, ".#{destination_ext}"
         method_name = origin_ext + '_to_' + destination_ext
@@ -57,14 +59,14 @@ module FileUtils
     puts_and_logs "Copying \"#{origin}\" to \"#{destination}\"."
     return if config[:simulate]
     unless should_process_file? destination
-       puts_and_logs " - File exists. Skipping copy..."
+       puts_and_logs ' - File exists. Skipping copy...'
       return
     end
     verify_destination_folder(destination)
     begin
       FileUtils.copy_file origin, destination
     rescue Exception => e
-      logger.error "An error occurred during the copy - " + e.message
+      logger.error "An error occurred during the copy - #{e.message}"
     end
   end
 

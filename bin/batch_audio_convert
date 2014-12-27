@@ -3,7 +3,7 @@
 ################################################################################
 # BatchAudioConvert
 #
-# Copyright (c) 2013 L.Briais under MIT license
+# Copyright (c) 2013-2015 L.Briais under MIT license
 # http://opensource.org/licenses/MIT
 ################################################################################
 
@@ -16,53 +16,59 @@ class BatchAudioConvertApp
   include EasyAppHelper
   include BatchAudioConvert
 
-  APP_NAME = "batch_audio_convert"
-  # DESCRIPTION = "Batch Audio Converter"
+  APP_NAME = 'batch_audio_convert'
 
   def initialize
     # Providing this data is optional but brings better logging and online help
     config.describes_application(app_name: APP_NAME, app_version: VERSION, app_description: DESCRIPTION)
-    logger.info "Application is now started."
+    add_cmd_line_options
+    hardcoded_config
   end
 
   def main
     begin
-      add_cmd_line_options
-      raise "No source has been provided !!" if config[:source].nil?
-      raise "No destination has been provided !!" if config[:destination].nil?
+      logger.info 'Application is now started.'
+      logger.debug config.detailed_layers_info
+      raise 'No source has been provided !!' unless  config[:source]
+      raise 'No destination has been provided !!' unless  config[:destination]
     rescue => e
-      logger.fatal "Parameters not correctly provided: " + e.message
+      logger.fatal 'Parameters not correctly provided: ' + e.message
       puts help
       puts e.message
       exit
     end
     begin
       if config[:help]
-        puts config.help
+        puts config.command_line_help
         exit 0
       end
       process_files build_file_list
     rescue => e
-      logger.fatal "Unhandled error: " + e.message
-      e.backtrace.each {|m| logger.fatal m}
+      puts "Program aborted with message: '#{e.message}'."
+      if config[:debug]
+        logger.fatal "#{e.message}\nBacktrace:\n#{e.backtrace.join("\n\t")}"
+      else
+        puts '  Use --debug option for more detail.'
+      end
     end
-  end
 
-
-  def show_config
-    puts "Application config is"
-    puts config.to_yaml
   end
 
   def add_cmd_line_options
     config.add_command_line_section do |slop|
       # Enables to override ogg quality from command line
-      slop.on :q, 'ogg-quality', 'Defines encoding quality for OGG files.', :argument => true, :as => Integer
+      slop.on :q, 'ogg-quality', 'Defines encoding quality for OGG files.', argument: true, as: Integer
       # Enables to override mp3 quality from command line
-      slop.on :b, 'mp3-quality', 'Defines encoding quality (bitrate) for MP3 files.', :argument => true, :as => Integer
+      slop.on :b, 'mp3-quality', 'Defines encoding quality (bitrate) for MP3 files.', argument: true, as: Integer
       # Should we override files
-      slop.on :f, :force, 'Forces files override.', :argument => false
+      slop.on :f, :force, 'Forces files override.', argument: false
     end
+  end
+
+  def hardcoded_config
+    config[:extensions] ||= {
+        flac: :ogg
+    }
   end
 
   DESCRIPTION = <<DESCR

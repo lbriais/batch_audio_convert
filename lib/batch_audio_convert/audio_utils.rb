@@ -1,7 +1,7 @@
 ################################################################################
 # BatchAudioConvert
 #
-# Copyright (c) 2013 L.Briais under MIT license
+# Copyright (c) 2013-2015 L.Briais under MIT license
 # http://opensource.org/licenses/MIT
 ################################################################################
 
@@ -40,7 +40,7 @@ module AudioUtils
     puts_and_logs "Transforming \"#{origin}\" into \"#{destination}\"."
     return if config[:simulate]
     unless should_process_file? destination
-      puts_and_logs " - File exists. Skipping transformation..."
+      puts_and_logs ' - File exists. Skipping transformation...'
       return
     end
     verify_destination_folder(destination)
@@ -50,19 +50,19 @@ module AudioUtils
       tags = flac_tags(origin)
       run_command build_flac_cmd(origin, temp_file.path)
       yield temp_file, tags
-      puts_and_logs " - Done"
+      puts_and_logs ' - Done'
     ensure
       temp_file.unlink
     end
   end
 
   def flac_tags(file)
-    puts_and_logs " - Reading FLAC tags"
+    puts_and_logs ' - Reading FLAC tags'
     tags = {}
-    TagLib::FileRef.open(file) do |fileref|
-      tag = fileref.tag
-      TAGS.each do |tagname|
-        tags[tagname] = tag.send(tagname)
+    TagLib::FileRef.open(file) do |file_ref|
+      tag = file_ref.tag
+      TAGS.each do |tag_name|
+        tags[tag_name] = tag.send(tag_name)
       end
     end
     logger.debug tags.inspect
@@ -70,13 +70,13 @@ module AudioUtils
   end
 
   def set_ogg_tags(file, tags)
-    puts_and_logs " - Writing OGG tags"
-    TagLib::FileRef.open(file) do |fileref|
-      tag = fileref.tag
-      tags.each do |tagname, value|
-        tag.send(tagname.to_s + "=", tags[tagname])
+    puts_and_logs ' - Writing OGG tags'
+    TagLib::FileRef.open(file) do |file_ref|
+      tag = file_ref.tag
+      tags.each do |tag_name, value|
+        tag.send("#{tag_name.to_s}=", tags[tag_name])
       end
-      fileref.save
+      file_ref.save
     end
   end
 
@@ -86,7 +86,7 @@ module AudioUtils
   end
 
   def build_ogg_cmd(origin, destination)
-    config[:'ogg-quality'] = 6 if config[:'ogg-quality'].nil?
+    config[:'ogg-quality'] ||= 6
 
     cmd = OGG_ENC_CMD.gsub '##WAVFILE##', origin
     cmd.gsub! '##OGGFILE##', destination
@@ -94,18 +94,18 @@ module AudioUtils
   end
 
   def set_mp3_tags(file, tags)
-    puts_and_logs " - Writing MP3 tags"
-    TagLib::MPEG::File.open(file) do |fileref|
-      tag = fileref.id3v2_tag(true)
-      tags.each do |tagname, value|
-        tag.send(tagname.to_s + "=", tags[tagname])
+    puts_and_logs ' - Writing MP3 tags'
+    TagLib::MPEG::File.open(file) do |file_ref|
+      tag = file_ref.id3v2_tag(true)
+      tags.each do |tag_name, value|
+        tag.send("#{tag_name.to_s}=", tags[tag_name])
       end
-      fileref.save
+      file_ref.save
     end
   end  
 
   def build_mp3_cmd(origin, destination)
-    config[:'mp3-quality'] = 256 if config[:'mp3-quality'].nil?
+    config[:'mp3-quality'] ||= 256
 
     cmd = MP3_ENC_CMD.gsub '##WAVFILE##', origin
     cmd.gsub! '##MP3FILE##', destination
