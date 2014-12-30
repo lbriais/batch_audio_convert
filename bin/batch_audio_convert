@@ -9,6 +9,7 @@
 
 require 'easy_app_helper'
 require 'batch_audio_convert'
+require 'pry'
 
 
 class BatchAudioConvertApp
@@ -33,7 +34,7 @@ class BatchAudioConvertApp
       raise 'No destination has been provided !!' unless  config[:destination]
     rescue => e
       logger.fatal 'Parameters not correctly provided: ' + e.message
-      puts help
+      puts config.command_line_help
       puts e.message
       exit
     end

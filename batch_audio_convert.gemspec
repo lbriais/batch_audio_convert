@@ -24,5 +24,6 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'easy_app_helper', '~> 2.0'
   spec.add_runtime_dependency 'taglib-ruby'
+  spec.add_runtime_dependency 'pry'
 
 end
