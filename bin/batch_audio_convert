@@ -23,13 +23,13 @@ class BatchAudioConvertApp
     # Providing this data is optional but brings better logging and online help
     config.describes_application(app_name: APP_NAME, app_version: VERSION, app_description: DESCRIPTION)
     add_cmd_line_options
-    hardcoded_config
   end
 
   def main
     begin
       logger.info 'Application is now started.'
-      logger.debug config.detailed_layers_info
+      logger.debug "Config layer ->\n#{config.detailed_layers_info}"
+      logger.debug "Merged config ->#{config[].to_yaml}"
       raise 'No source has been provided !!' unless  config[:source]
       raise 'No destination has been provided !!' unless  config[:destination]
     rescue => e
@@ -64,12 +64,6 @@ class BatchAudioConvertApp
       # Should we override files
       slop.on :f, :force, 'Forces files override.', argument: false
     end
-  end
-
-  def hardcoded_config
-    config[:extensions] ||= {
-        flac: :ogg # mp3 although supported
-    }
   end
 
   DESCRIPTION = <<DESCR
