@@ -45,3 +45,7 @@ tmp
 .idea
 #RedCar
 .redcar
+#ruby-debug
+.rdebugrc
+#Eclipse
+.metadata/
