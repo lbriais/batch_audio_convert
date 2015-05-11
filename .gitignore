@@ -31,6 +31,10 @@ tmp
 *(copie)*
 # RVM
 .rvmrc
+# rbenv
+.ruby-version
+# pry
+.pryrc
 # VisualRuby
 .vr_settings.yaml
 # Emacs
@@ -43,5 +47,9 @@ tmp
 *.geany
 # RubyMine
 .idea
-#RedCar
+# RedCar
 .redcar
+# ruby-debug
+.rdebugrc
+# Eclipse
+.metadata/
