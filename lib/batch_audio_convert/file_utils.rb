@@ -38,9 +38,9 @@ module FileUtils
     false
   end
 
-  # Define destination name and transormation method to apply for a file.
+  # Define destination name and transformation method to apply for a file.
   def analyze_file(file)
-    method_name = :copy
+    method_name = :default_copy
     destination_file = String.new(file)
     config[:extensions].each do |origin_ext, destination_ext|
       origin_ext = origin_ext.to_s
@@ -55,7 +55,7 @@ module FileUtils
     return {:method_name => method_name, :destination_file => destination_file}
   end
 
-  def copy(origin, destination)
+  def default_copy(origin, destination)
     puts_and_logs "Copying \"#{origin}\" to \"#{destination}\"."
     return if config[:simulate]
     unless should_process_file? destination
