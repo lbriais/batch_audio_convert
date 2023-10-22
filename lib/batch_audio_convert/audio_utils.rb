@@ -10,11 +10,21 @@ require 'taglib'
 
 module AudioUtils
 
-  # TAGS = %i[title artist comment genre album track year discnumber tracktotal description date].freeze
-
   OGG_ENC_CMD = 'oggenc -q##OGGQUALITY## -o "##OGGFILE##" "##WAVFILE##"'
   FLAC_DEC_CMD = 'flac -d -f -o "##WAVFILE##" "##FLACFILE##"'
   MP3_ENC_CMD = 'lame -h -b ##MP3QUALITY## "##WAVFILE##" "##MP3FILE##"'
+
+  # From ID3V2 Reference https://web.archive.org/web/20161117211455/http://id3.org/d3v2.3.0
+  MP3_TAGS = {
+    'ALBUM' => 'TALB',
+    'ARTIST' => 'TPE1',
+    'ALBUMARTIST' => 'TPE2',
+    'TITLE' => 'TIT2',
+    'COPYRIGHT' => 'TCOP',
+    'DATE' => 'TDRC',
+    'TRACKNUMBER' => 'TRCK'
+  }.freeze
+
 
   def flac_to_ogg (origin, destination)
     flac_to origin, destination do |temp_file, tags|
@@ -92,13 +102,28 @@ module AudioUtils
   def set_mp3_tags(file, tags)
     puts_and_logs ' - Writing MP3 tags'
     TagLib::MPEG::File.open(file) do |file_ref|
-      tag = file_ref.id3v2_tag(true)
+      tag = file_ref.id3v2_tag
       tags.each do |tag_name, value|
-        tag.send("#{tag_name.to_s}=", tags[tag_name])
+        # tag.send("#{tag_name}=", value.first)
+        unless MP3_TAGS.keys.include? tag_name
+          logger.warn "Ignoring tag '#{tag_name}' ! Not handled !"
+          next
+        end
+
+        logger.debug "Processing original tag '#{tag_name}' as '#{MP3_TAGS[tag_name]}' ID3V2 tag..."
+        frame = TagLib::ID3v2::TextIdentificationFrame.new(MP3_TAGS[tag_name], TagLib::String::UTF8)
+        val = if tag_name == 'TRACKNUMBER'
+                       tags['TRACKTOTAL'] ? "#{value.first}/#{tags['TRACKTOTAL'].first}" : value.first
+                     else
+                       value.first
+                     end
+        logger.debug " - #{MP3_TAGS[tag_name]} => #{val}"
+        frame.text = val
+        tag.add_frame frame
       end
       file_ref.save
     end
-  end  
+  end
 
   def build_mp3_cmd(origin, destination)
     config[:'mp3-quality'] ||= 256
