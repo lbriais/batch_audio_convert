@@ -10,7 +10,7 @@ require 'taglib'
 
 module AudioUtils
 
-  TAGS = [:title, :artist, :comment, :genre, :album, :track, :year]
+  # TAGS = %i[title artist comment genre album track year discnumber tracktotal description date].freeze
 
   OGG_ENC_CMD = 'oggenc -q##OGGQUALITY## -o "##OGGFILE##" "##WAVFILE##"'
   FLAC_DEC_CMD = 'flac -d -f -o "##WAVFILE##" "##FLACFILE##"'
@@ -58,25 +58,21 @@ module AudioUtils
 
   def flac_tags(file)
     puts_and_logs ' - Reading FLAC tags'
-    tags = {}
-    TagLib::FileRef.open(file) do |file_ref|
-      tag = file_ref.tag
-      TAGS.each do |tag_name|
-        tags[tag_name] = tag.send(tag_name)
-      end
+    TagLib::FLAC::File.open(file) do |file_handle|
+      tag = file_handle.xiph_comment
+      logger.debug tag.field_list_map.inspect
+      tag.field_list_map
     end
-    logger.debug tags.inspect
-    tags
   end
 
   def set_ogg_tags(file, tags)
     puts_and_logs ' - Writing OGG tags'
-    TagLib::FileRef.open(file) do |file_ref|
-      tag = file_ref.tag
+    TagLib::Ogg::Vorbis::File.open(file) do |file_handle|
+      tag = file_handle.tag
       tags.each do |tag_name, value|
-        tag.send("#{tag_name.to_s}=", tags[tag_name])
+        tag.add_field tag_name, value.first
       end
-      file_ref.save
+      file_handle.save
     end
   end
 

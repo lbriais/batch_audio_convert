@@ -9,7 +9,6 @@
 
 require 'easy_app_helper'
 require 'batch_audio_convert'
-require 'pry'
 
 
 class BatchAudioConvertApp
@@ -20,7 +19,7 @@ class BatchAudioConvertApp
   APP_NAME = 'batch_audio_convert'
 
   def initialize
-    # Providing this data is optional but brings better logging and online help
+    # Providing this data is optional but brings better logging and online help
     config.describes_application(app_name: APP_NAME, app_version: VERSION, app_description: DESCRIPTION)
     add_cmd_line_options
   end
